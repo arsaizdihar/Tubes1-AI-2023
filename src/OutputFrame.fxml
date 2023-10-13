@@ -69,6 +69,15 @@
                 </Label>
             </HBox>
 
+            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="6">
+                <Button fx:id="nextButton" text=">" onAction="#nextTurn">
+                    <padding><Insets top="10" bottom="10" left="10" right="10"/></padding>
+                    <font>
+                        <Font name="Arial Bold" size="12"/>
+                    </font>
+                </Button>
+            </HBox>
+
             <HBox alignment="CENTER" GridPane.rowIndex="7" GridPane.columnIndex="0">
                 <Button id="gameButton" text="End Game" onAction="#endGame">
                     <padding><Insets top="10" bottom="10" left="10" right="10"/></padding>

@@ -2,12 +2,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -33,8 +31,10 @@ public class OutputFrameController {
     private Label roundsLeftLabel;
     @FXML
     private Label playerXName;
+    private String playerXType;
     @FXML
     private Label playerOName;
+    private String playerOType;
     @FXML
     private HBox playerXBoxPane;
     @FXML
@@ -43,15 +43,17 @@ public class OutputFrameController {
     private Label playerXScoreLabel;
     @FXML
     private Label playerOScoreLabel;
+    @FXML
+    private Button nextButton;
 
 
     private boolean playerXTurn;
     private int playerXScore;
     private int playerOScore;
     private int roundsLeft;
-    private boolean isBotFirst;
-    private Bot bot;
-
+    private boolean isPlayerOFirst;
+    private Bot botX = null;
+    private Bot botO;
 
     private static final int ROW = 8;
     private static final int COL = 8;
@@ -66,22 +68,45 @@ public class OutputFrameController {
      * @param name1 Name of Player 1 (Player).
      * @param name2 Name of Player 2 (Bot).
      * @param rounds The number of rounds chosen to be played.
-     * @param isBotFirst True if bot is first, false otherwise.
+     * @param isPlayer2First True if bot is first, false otherwise.
      *
      */
-    void getInput(String name1, String name2, String rounds, boolean isBotFirst){
+    void getInput(String name1, String type1, String name2, String type2, String rounds, boolean isPlayer2First){
         this.playerXName.setText(name1);
+        this.playerXType = type1;
         this.playerOName.setText(name2);
+        this.playerOType = type2;
         this.roundsLeftLabel.setText(rounds);
         this.roundsLeft = Integer.parseInt(rounds);
-        this.isBotFirst = isBotFirst;
+        this.isPlayerOFirst = isPlayer2First;
 
-        // Start bot
-        this.bot = new Bot();
-        this.playerXTurn = !isBotFirst;
-        if (this.isBotFirst) {
-            this.moveBot();
+        if (this.playerXType.equals("Human")) {
+            for (int i = 0; i < ROW; i++) {
+                for (int j = 0; j < COL; j++) {
+                    // Add ActionListener to each button such that when it is clicked, it calls
+                    // the selected coordinates method with its i and j coordinates.
+                    final int finalI = i;
+                    final int finalJ = j;
+                    this.buttons[i][j].setOnAction(event -> this.selectedCoordinates(finalI, finalJ));
+                }
+            }
+        } else if (this.playerXType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
+
+        } else if (this.playerXType.equals("Bot (Local Search)")) {
+            this.botX = new BotLocalSearch();
+        } else {
+            // Bot (Genetic Algorithm)
         }
+
+        if (this.playerOType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
+
+        } else if (this.playerOType.equals("Bot (Local Search)")) {
+            this.botO = new BotLocalSearch();
+        } else {
+            // Bot (Genetic Algorithm)
+        }
+
+        this.playerXTurn = !isPlayer2First;
     }
 
 
@@ -115,12 +140,6 @@ public class OutputFrameController {
                 this.buttons[i][j].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 this.buttons[i][j].setCursor(Cursor.HAND);
                 this.gameBoard.add(this.buttons[i][j], j, i);
-
-                // Add ActionListener to each button such that when it is clicked, it calls
-                // the selected coordinates method with its i and j coordinates.
-                final int finalI = i;
-                final int finalJ = j;
-                this.buttons[i][j].setOnAction(event -> this.selectedCoordinates(finalI, finalJ));
             }
         }
 
@@ -187,17 +206,15 @@ public class OutputFrameController {
                 this.updateGameBoard(i, j);
                 this.playerXTurn = false;         // Alternate player's turn.
 
-                if (isBotFirst) {
+                if (isPlayerOFirst) {
                     this.roundsLeft--; // Decrement the number of rounds left after both Player X & Player O have played.
                     this.roundsLeftLabel.setText(String.valueOf(this.roundsLeft));
                 }
 
-                if (isBotFirst && this.roundsLeft == 0) {
+                if (isPlayerOFirst && this.roundsLeft == 0) {
+                    this.nextButton.setDisable(true);
                     this.endOfGame();
                 }
-
-                // Bot's turn
-                this.moveBot();
             }
             else {
                 this.playerXBoxPane.setStyle("-fx-background-color: #90EE90; -fx-border-color: #D3D3D3;");
@@ -208,12 +225,13 @@ public class OutputFrameController {
                 this.updateGameBoard(i, j);
                 this.playerXTurn = true;
 
-                if (!isBotFirst) {
+                if (!isPlayerOFirst) {
                     this.roundsLeft--; // Decrement the number of rounds left after both Player X & Player O have played.
                     this.roundsLeftLabel.setText(String.valueOf(this.roundsLeft));
                 }
 
-                if (!isBotFirst && this.roundsLeft == 0) { // Game has terminated.
+                if (!isPlayerOFirst && this.roundsLeft == 0) { // Game has terminated.
+                    this.nextButton.setDisable(true);
                     this.endOfGame();       // Determine & announce the winner.
                 }
             }
@@ -315,6 +333,24 @@ public class OutputFrameController {
                 this.buttons[i][j].setDisable(true);
     }
 
+    @FXML
+    private void nextTurn() {
+        if (this.playerXTurn) {
+            if (!this.playerXType.equals("Human")) {
+                movePlayerX();
+            } else {
+                // Dialog Human's turn
+                Dialog<String> dialogHumansTurn = new Dialog<>();
+                dialogHumansTurn.setTitle("Information");
+                dialogHumansTurn.setContentText("You must select the pane");
+                dialogHumansTurn.getDialogPane().getButtonTypes().add(new ButtonType("OK", ButtonBar.ButtonData.OK_DONE));
+                dialogHumansTurn.showAndWait();
+            }
+        } else {
+            movePlayerO();
+        }
+    }
+
 
     /**
      * Close OutputFrame controlled by OutputFrameController if end game button is clicked.
@@ -346,8 +382,22 @@ public class OutputFrameController {
         primaryStage.show();
     }
 
-    private void moveBot() {
-        int[] botMove = this.bot.move();
+    private void movePlayerX() {
+        int[] botMove = this.botX.move();
+        int i = botMove[0];
+        int j = botMove[1];
+
+        if (!this.buttons[i][j].getText().equals("")) {
+            new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
+            System.exit(1);
+            return;
+        }
+
+        this.selectedCoordinates(i, j);
+    }
+
+    private void movePlayerO() {
+        int[] botMove = this.botO.move();
         int i = botMove[0];
         int j = botMove[1];
 

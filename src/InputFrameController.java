@@ -22,12 +22,18 @@ import java.io.IOException;
  */
 public class InputFrameController{
 
-    public CheckBox isBotFirst;
+    public CheckBox isPlayer2First;
     @FXML
     private TextField player1;
 
     @FXML
+    private ComboBox<String> player1Type;
+
+    @FXML
     private TextField player2;
+
+    @FXML
+    private ComboBox<String> player2Type;
 
     @FXML
     private ComboBox<String> numberOfRounds;
@@ -40,9 +46,24 @@ public class InputFrameController{
      */
     @FXML
     private void initialize(){
+        ObservableList<String> player1TypeDropdown = FXCollections.observableArrayList(
+                "", "Human", "Bot (Minimax with Alpha-Beta Pruning)",
+                "Bot (Local Search)", "Bot (Genetic Algorithm)");
+
+        ObservableList<String> player2TypeDropdown = FXCollections.observableArrayList(
+                "", "Bot (Minimax with Alpha-Beta Pruning)",
+                "Bot (Local Search)", "Bot (Genetic Algorithm)");
+
         ObservableList<String> numberOfRoundsDropdown = FXCollections.observableArrayList(
                 "", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
                 "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28");
+
+        this.player1Type.setItems(player1TypeDropdown);
+        this.player1Type.getSelectionModel().select(0);
+
+        this.player2Type.setItems(player2TypeDropdown);
+        this.player2Type.getSelectionModel().select(0);
+
         this.numberOfRounds.setItems(numberOfRoundsDropdown);
         this.numberOfRounds.getSelectionModel().select(0);
     }
@@ -57,6 +78,8 @@ public class InputFrameController{
     private void reset(){
         this.player1.setText("");
         this.player2.setText("");
+        this.player1Type.getSelectionModel().select(0);
+        this.player2Type.getSelectionModel().select(0);
         this.numberOfRounds.getSelectionModel().select(0);
     }
 
@@ -80,7 +103,14 @@ public class InputFrameController{
 
             // Get controller of output frame and pass input including player names and number of rounds chosen.
             OutputFrameController outputFC = loader.getController();
-            outputFC.getInput(this.player1.getText(), this.player2.getText(), this.numberOfRounds.getValue(), this.isBotFirst.isSelected());
+            outputFC.getInput(
+                    this.player1.getText(),
+                    this.player1Type.getValue(),
+                    this.player2.getText(),
+                    this.player2Type.getValue(),
+                    this.numberOfRounds.getValue(),
+                    this.isPlayer2First.isSelected()
+            );
 
             // Open the new frame.
             Stage secondaryStage = new Stage();
@@ -100,7 +130,9 @@ public class InputFrameController{
      */
     private boolean isInputFieldValidated() {
         String playerX = this.player1.getText();
+        String playerXType = this.player1Type.getValue();
         String playerO = this.player2.getText();
+        String playerOType = this.player2Type.getValue();
         String roundNumber = this.numberOfRounds.getValue();
 
         if (playerX.length() == 0) {
@@ -108,8 +140,18 @@ public class InputFrameController{
             return false;
         }
 
+        if (playerXType.length() == 0) {
+            new Alert(Alert.AlertType.ERROR, "Player 1 type is not specified.").showAndWait();
+            return false;
+        }
+
         if (playerO.length() == 0) {
             new Alert(Alert.AlertType.ERROR, "Player 2 name is blank.").showAndWait();
+            return false;
+        }
+
+        if (playerOType.length() == 0) {
+            new Alert(Alert.AlertType.ERROR, "Player 2 type is not specified.").showAndWait();
             return false;
         }
 
