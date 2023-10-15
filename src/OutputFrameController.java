@@ -87,7 +87,11 @@ public class OutputFrameController {
                     // the selected coordinates method with its i and j coordinates.
                     final int finalI = i;
                     final int finalJ = j;
-                    this.buttons[i][j].setOnAction(event -> this.selectedCoordinates(finalI, finalJ));
+                    this.buttons[i][j].setOnAction(event -> {
+                        if (this.playerXTurn) {
+                            this.selectedCoordinates(finalI, finalJ);
+                        }
+                    });
                 }
             }
         } else if (this.playerXType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
