@@ -91,7 +91,7 @@ public class OutputFrameController {
                 }
             }
         } else if (this.playerXType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
-
+            this.botX = new BotAlphaBetaPrune(!isPlayer2First, this.roundsLeft);
         } else if (this.playerXType.equals("Bot (Local Search)")) {
             this.botX = new BotLocalSearch();
         } else {
@@ -99,7 +99,7 @@ public class OutputFrameController {
         }
 
         if (this.playerOType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
-
+            this.botO = new BotAlphaBetaPrune(isPlayer2First, this.roundsLeft);
         } else if (this.playerOType.equals("Bot (Local Search)")) {
             this.botO = new BotLocalSearch();
         } else {
@@ -137,7 +137,7 @@ public class OutputFrameController {
         for (int i = 0; i < ROW; i++){
             for (int j = 0; j < COL; j++) {
                 this.buttons[i][j] = new Button();
-                this.buttons[i][j].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    this.buttons[i][j].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 this.buttons[i][j].setCursor(Cursor.HAND);
                 this.gameBoard.add(this.buttons[i][j], j, i);
             }
@@ -246,7 +246,7 @@ public class OutputFrameController {
      *
      */
     private void updateGameBoard(int i, int j) {
-        // Value of indices to control the lower/upper bound of rows and columns
+        // Value of indices to control the lower/upper bound of rows and colum ns
         // in order to change surrounding/adjacent X's and O's only on the game board.
         // Four boundaries:  First & last row and first & last column.
 
@@ -383,7 +383,7 @@ public class OutputFrameController {
     }
 
     private void movePlayerX() {
-        int[] botMove = this.botX.move();
+        int[] botMove = this.botX.move(this.buttons, this.playerXScore, this.playerOScore);
         int i = botMove[0];
         int j = botMove[1];
 
@@ -397,9 +397,10 @@ public class OutputFrameController {
     }
 
     private void movePlayerO() {
-        int[] botMove = this.botO.move();
+        int[] botMove = this.botO.move(this.buttons, this.playerXScore, this.playerOScore);
         int i = botMove[0];
         int j = botMove[1];
+        System.out.println("Bot move: " + i + " " + j);
 
         if (!this.buttons[i][j].getText().equals("")) {
             new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
