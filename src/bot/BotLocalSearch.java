@@ -1,20 +1,40 @@
 package bot;
 
 import board.Board;
-import bot.Bot;
+import board.BoardChange;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class BotLocalSearch extends Bot {
-    public BotLocalSearch(Board board) {
+    private final char ownSymbol;
+    public BotLocalSearch(Board board, boolean first) {
         super(board);
-    }
-
-    public int[] move() {
-        // TODO : Implement Local Search Algorithm
-        return new int[]{(int) (Math.random()*8), (int) (Math.random()*8)};
+        this.ownSymbol = first ? 'X' : 'O';
     }
 
     @Override
     public int[] move(int Xscore, int Oscore) {
-        return new int[0];
+        int obj = Integer.MIN_VALUE;
+        ArrayList<int []> locations = new ArrayList<>();
+        Board board = this.getBoard();
+        for (int y = 0; y < getBoard().getRowCount(); y++) {
+            for (int x = 0; x < getBoard().getColCount(); x++) {
+                if (this.getBoard().getCol(x, y) != 'n') continue;
+                BoardChange boardChange = new BoardChange();
+                int val = board.addSymbol(ownSymbol, x, y, boardChange);
+                boardChange.rollback(board);
+                if (val > obj) {
+                    obj = val;
+                    locations.clear();
+                    locations.add(new int[]{y, x});
+                } else if (val == obj) {
+                    locations.add(new int[]{y, x});
+                }
+            }
+        }
+        
+        return locations.get(new Random().nextInt(locations.size()));
     }
 }

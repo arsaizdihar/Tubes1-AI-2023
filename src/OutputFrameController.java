@@ -102,7 +102,7 @@ public class OutputFrameController {
         } else if (this.playerXType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
             this.botX = new BotAlphaBetaPrune(board, !isPlayer2First, this.roundsLeft);
         } else if (this.playerXType.equals("Bot (Local Search)")) {
-            this.botX = new BotLocalSearch(board);
+            this.botX = new BotLocalSearch(board, !isPlayer2First);
         } else {
             // Bot (Genetic Algorithm)
         }
@@ -110,7 +110,7 @@ public class OutputFrameController {
         if (this.playerOType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
             this.botO = new BotAlphaBetaPrune(board, isPlayer2First, this.roundsLeft);
         } else if (this.playerOType.equals("Bot (Local Search)")) {
-            this.botO = new BotLocalSearch(board);
+            this.botO = new BotLocalSearch(board, isPlayer2First);
         } else {
             // Bot (Genetic Algorithm)
         }
