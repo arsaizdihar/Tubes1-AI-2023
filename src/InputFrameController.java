@@ -18,9 +18,8 @@ import java.io.IOException;
  * If validation is successful, the Adjacency game screen will pop up in a different window.
  *
  * @author Jedid Ahn
- *
  */
-public class InputFrameController{
+public class InputFrameController {
 
     public CheckBox isPlayer2First;
     @FXML
@@ -42,17 +41,16 @@ public class InputFrameController{
     /**
      * Initialize the dropdown ComboBox with a list of items that are allowed to be selected.
      * Select the first item in the list as the default value of the dropdown.
-     *
      */
     @FXML
-    private void initialize(){
+    private void initialize() {
         ObservableList<String> player1TypeDropdown = FXCollections.observableArrayList(
-                "", "Human", "bot.Bot (Minimax with Alpha-Beta Pruning)",
-                "bot.Bot (Local Search)", "bot.Bot (Genetic Algorithm)");
+                "", "Human", "Bot (Minimax with Alpha-Beta Pruning)",
+                "Bot (Local Search)", "Bot (Genetic Algorithm)");
 
         ObservableList<String> player2TypeDropdown = FXCollections.observableArrayList(
-                "", "bot.Bot (Minimax with Alpha-Beta Pruning)",
-                "bot.Bot (Local Search)", "bot.Bot (Genetic Algorithm)");
+                "", "Bot (Minimax with Alpha-Beta Pruning)",
+                "Bot (Local Search)", "Bot (Genetic Algorithm)");
 
         ObservableList<String> numberOfRoundsDropdown = FXCollections.observableArrayList(
                 "", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
@@ -72,10 +70,9 @@ public class InputFrameController{
     /**
      * Reset player1 and player2 text fields and reset numberOfRounds dropdown to default value
      * if reset button is clicked.
-     *
      */
     @FXML
-    private void reset(){
+    private void reset() {
         this.player1.setText("");
         this.player2.setText("");
         this.player1Type.getSelectionModel().select(0);
@@ -88,12 +85,11 @@ public class InputFrameController{
      * Open OutputFrame controlled by OutputFrameController if play button is clicked and
      * all input have been successfully validated.
      *
-     * @exception IOException To load the FXMLLoader to open the Adjacency game screen (output screen).
-     *
+     * @throws IOException To load the FXMLLoader to open the Adjacency game screen (output screen).
      */
     @FXML
-    private void play() throws IOException{
-        if (this.isInputFieldValidated()){
+    private void play() throws IOException {
+        if (this.isInputFieldValidated()) {
             // Close primary stage/input frame.
             Stage primaryStage = (Stage) this.player1.getScene().getWindow();
             primaryStage.close();
@@ -114,7 +110,7 @@ public class InputFrameController{
 
             // Open the new frame.
             Stage secondaryStage = new Stage();
-            secondaryStage.setTitle("Game board.Board Display");
+            secondaryStage.setTitle("Game Board Display");
             secondaryStage.setScene(new Scene(root));
             secondaryStage.setResizable(true);
             secondaryStage.show();
@@ -126,7 +122,6 @@ public class InputFrameController{
      * Return whether all input fields have been successfully validated or not.
      *
      * @return boolean
-     *
      */
     private boolean isInputFieldValidated() {
         String playerX = this.player1.getText();
@@ -155,7 +150,7 @@ public class InputFrameController{
             return false;
         }
 
-        if (playerX.equals(playerO)){
+        if (playerX.equals(playerO)) {
             new Alert(Alert.AlertType.ERROR, "Player 1 and Player 2 cannot have the same name.").showAndWait();
             return false;
         }

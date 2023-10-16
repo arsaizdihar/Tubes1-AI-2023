@@ -72,7 +72,7 @@ public class OutputFrameController {
      * the input frame and is output in the score board of the output frame.
      *
      * @param name1          Name of Player 1 (Player).
-     * @param name2          Name of Player 2 (bot.Bot).
+     * @param name2          Name of Player 2 (Bot).
      * @param rounds         The number of rounds chosen to be played.
      * @param isPlayer2First True if bot is first, false otherwise.
      */
@@ -99,20 +99,20 @@ public class OutputFrameController {
                     });
                 }
             }
-        } else if (this.playerXType.equals("bot.Bot (Minimax with Alpha-Beta Pruning)")) {
+        } else if (this.playerXType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
             this.botX = new BotAlphaBetaPrune(board, !isPlayer2First, this.roundsLeft);
-        } else if (this.playerXType.equals("bot.Bot (Local Search)")) {
+        } else if (this.playerXType.equals("Bot (Local Search)")) {
             this.botX = new BotLocalSearch(board);
         } else {
-            // bot.Bot (Genetic Algorithm)
+            // Bot (Genetic Algorithm)
         }
 
-        if (this.playerOType.equals("bot.Bot (Minimax with Alpha-Beta Pruning)")) {
+        if (this.playerOType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
             this.botO = new BotAlphaBetaPrune(board, isPlayer2First, this.roundsLeft);
-        } else if (this.playerOType.equals("bot.Bot (Local Search)")) {
+        } else if (this.playerOType.equals("Bot (Local Search)")) {
             this.botO = new BotLocalSearch(board);
         } else {
-            // bot.Bot (Genetic Algorithm)
+            // Bot (Genetic Algorithm)
         }
 
         this.playerXTurn = !isPlayer2First;
@@ -390,7 +390,7 @@ public class OutputFrameController {
         int j = botMove[1];
 
         if (!this.buttons[i][j].getText().equals("")) {
-            new Alert(Alert.AlertType.ERROR, "bot.Bot Invalid Coordinates. Exiting.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
             System.exit(1);
             return;
         }
@@ -430,10 +430,10 @@ public class OutputFrameController {
         int[] botMove = moveBot(this.botO);
         int i = botMove[0];
         int j = botMove[1];
-        System.out.println("bot.Bot move: " + i + " " + j);
+        System.out.println("Bot move: " + i + " " + j);
 
         if (!this.buttons[i][j].getText().equals("")) {
-            new Alert(Alert.AlertType.ERROR, "bot.Bot Invalid Coordinates. Exiting.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
             System.exit(1);
             return;
         }
