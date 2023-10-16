@@ -47,12 +47,12 @@ public class InputFrameController{
     @FXML
     private void initialize(){
         ObservableList<String> player1TypeDropdown = FXCollections.observableArrayList(
-                "", "Human", "Bot (Minimax with Alpha-Beta Pruning)",
-                "Bot (Local Search)", "Bot (Genetic Algorithm)");
+                "", "Human", "bot.Bot (Minimax with Alpha-Beta Pruning)",
+                "bot.Bot (Local Search)", "bot.Bot (Genetic Algorithm)");
 
         ObservableList<String> player2TypeDropdown = FXCollections.observableArrayList(
-                "", "Bot (Minimax with Alpha-Beta Pruning)",
-                "Bot (Local Search)", "Bot (Genetic Algorithm)");
+                "", "bot.Bot (Minimax with Alpha-Beta Pruning)",
+                "bot.Bot (Local Search)", "bot.Bot (Genetic Algorithm)");
 
         ObservableList<String> numberOfRoundsDropdown = FXCollections.observableArrayList(
                 "", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
@@ -114,7 +114,7 @@ public class InputFrameController{
 
             // Open the new frame.
             Stage secondaryStage = new Stage();
-            secondaryStage.setTitle("Game Board Display");
+            secondaryStage.setTitle("Game board.Board Display");
             secondaryStage.setScene(new Scene(root));
             secondaryStage.setResizable(true);
             secondaryStage.show();

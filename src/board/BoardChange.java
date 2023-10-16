@@ -1,5 +1,8 @@
+package board;
+
+import board.Board;
+
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class BoardChange {
     private final ArrayList<int[]> locations;
@@ -10,7 +13,7 @@ public class BoardChange {
         this.symbols = new ArrayList<>();
     }
 
-    public void rollback(CharMatrix board) {
+    public void rollback(Board board) {
         for (int i = 0; i < locations.size(); i++) {
             int[] location = locations.get(i);
             board.setCol(location[0], location[1], symbols.get(i));
