@@ -1,8 +1,5 @@
 import board.Board;
-import bot.Bot;
-import bot.BotAlphaBetaPrune;
-import bot.BotLocalSearch;
-import bot.Fallbackable;
+import bot.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -105,6 +102,7 @@ public class OutputFrameController {
             this.botX = new BotLocalSearch(board, !isPlayer2First);
         } else {
             // Bot (Genetic Algorithm)
+            this.botX = new BotGenetic(board, !isPlayer2First, this.roundsLeft);
         }
 
         if (this.playerOType.equals("Bot (Minimax with Alpha-Beta Pruning)")) {
@@ -113,6 +111,7 @@ public class OutputFrameController {
             this.botO = new BotLocalSearch(board, isPlayer2First);
         } else {
             // Bot (Genetic Algorithm)
+            this.botO = new BotGenetic(board, isPlayer2First, this.roundsLeft);
         }
 
         this.playerXTurn = !isPlayer2First;
