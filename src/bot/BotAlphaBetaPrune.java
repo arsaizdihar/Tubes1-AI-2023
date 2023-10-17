@@ -10,6 +10,8 @@ public class BotAlphaBetaPrune extends Bot implements Fallbackable {
     private final char ownSymbol;
     private final char enemySymbol;
 
+    private int maxDepth = 8;
+
 
     public BotAlphaBetaPrune(Board board, boolean first, int nOfRounds) {
         super(board);
@@ -46,7 +48,7 @@ public class BotAlphaBetaPrune extends Bot implements Fallbackable {
 
     @Override
     public int[] move(int Xscore, int Oscore) {
-        return move(Xscore, Oscore, 8);
+        return move(Xscore, Oscore, maxDepth);
     }
 
     public int[] minimax(
@@ -120,7 +122,15 @@ public class BotAlphaBetaPrune extends Bot implements Fallbackable {
 
     @Override
     public int[] fallback(int Xscore, int Oscore) {
-        System.out.println("FALLBACK");
-        return move(Xscore, Oscore, 2);
+        if (maxDepth > 4) {
+            maxDepth--;
+        }
+        return move(Xscore, Oscore, 4);
+    }
+
+    @Override
+    public void onFastSuccess() {
+        maxDepth++;
+        System.out.println("MAXDEPTH " + maxDepth);
     }
 }
