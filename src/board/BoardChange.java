@@ -29,4 +29,8 @@ public class BoardChange {
         locations.add(new int[]{x, y});
         symbols.add(symbol);
     }
+
+    public ArrayList<int[]> getLocations() {
+        return this.locations;
+    }
 }
