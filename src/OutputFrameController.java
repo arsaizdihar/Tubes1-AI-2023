@@ -411,12 +411,17 @@ public class OutputFrameController {
             }
         });
         t.start();
+        long startTime = System.currentTimeMillis();
         try {
             t.join(4500);
             if (t.isAlive()) {
                 t.interrupt();
                 t.join();
             } else {
+                long endTime = System.currentTimeMillis();
+                if (endTime - startTime < 3000) {
+                    ((Fallbackable) bot).onFastSuccess();
+                }
                 System.out.println("SUCCESS");
                 return new int[]{result.get(0), result.get(1)};
             }
