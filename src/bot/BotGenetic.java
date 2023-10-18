@@ -2,7 +2,6 @@ package bot;
 
 import board.Board;
 import board.BoardChange;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ public class BotGenetic extends Bot implements Fallbackable {
 
     private int crossoverRate = 2;
 
-    private int mutationRate = 4;
+    private int mutationIdx = 4;
 
     private char ownSymbol;
 
@@ -23,6 +22,9 @@ public class BotGenetic extends Bot implements Fallbackable {
     private final int nGenerate = 500;
 
     private final int nThreshold = 20;
+
+    // Out of 10
+    private final int mutationRate = 2;
 
     protected ReservationTree rt = new ReservationTree();
 
@@ -146,12 +148,18 @@ public class BotGenetic extends Bot implements Fallbackable {
 
 
             Random random = new Random();
+            Random mutation = new Random();
             for (int i = 0; i < 4; i++) {
                 // Mutation
-                availIdx.removeAll(newGenes.get(i));
-                List<Integer> removedIdx = new ArrayList<>(newGenes.get(i));
-                newGenes.get(i).set(Math.min(history.size() - 1 + mutationRate, newGenes.get(i).size()-1), availIdx.get(random.nextInt(availIdx.size())));
-                availIdx.addAll(removedIdx);
+                int a = mutation.nextInt(10);
+                if (a < this.mutationRate) {
+//                    System.out.println(a + " MUTATION");
+                    availIdx.removeAll(newGenes.get(i));
+                    List<Integer> removedIdx = new ArrayList<>(newGenes.get(i));
+                    newGenes.get(i).set(Math.min(history.size() - 1 + mutationIdx + random.nextInt(mutationIdx), newGenes.get(i).size()-1), availIdx.get(random.nextInt(availIdx.size())));
+                    availIdx.addAll(removedIdx);
+                }
+
             }
 
             // Offspring
