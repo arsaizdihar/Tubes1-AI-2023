@@ -30,15 +30,14 @@ public class BotGenetic extends Bot implements Fallbackable {
 
     protected List<Integer> availIdx = new ArrayList<>();
 
+    protected int numRoundPlayed = 0;
+
     public BotGenetic(Board board, boolean first, int nRound) {
         super(board);
         this.boardChange = new BoardChange();
         this.ownSymbol = first ? 'X' : 'O';
         this.gameTreeDepth = nRound;
-        this.limitGeneration = 500;
-        if (nRound < 20) {
-            this.limitGeneration = 700;
-        }
+        this.limitGeneration = 200;
 
         for (int i = 0; i < getBoard().getRowCount() * getBoard().getColCount(); i++) {
             availIdx.add(i);
@@ -48,6 +47,7 @@ public class BotGenetic extends Bot implements Fallbackable {
 
     @Override
     public int[] move(int Xscore, int Oscore) {
+        this.numRoundPlayed += 1;
         return generate();
     }
 
@@ -69,6 +69,13 @@ public class BotGenetic extends Bot implements Fallbackable {
                 }
             }
         }
+        if (availIdx.size() == 1) {
+            int i = availIdx.get(0);
+            int[] move = new int[2];
+            move[1] = i % this.getBoard().getColCount();
+            move[0] = i / this.getBoard().getColCount();
+            return move;
+        }
         System.out.println(" ");
 
         // history
@@ -87,8 +94,8 @@ public class BotGenetic extends Bot implements Fallbackable {
         for (int i = 0; i < nGenerate; i++) {
             List<Integer> generated = new ArrayList<>();
             Random random = new Random();
-            for (int j = 0; j < gameTreeDepth - history.size(); j++) {
-                int chosenIdx = random.nextInt(availIdx.size() + (availIdx.isEmpty() ? 1 : 0)) + 1;
+            for (int j = 0; j < gameTreeDepth - numRoundPlayed + 1; j++) {
+                int chosenIdx = Math.min(availIdx.isEmpty()? 0 : (availIdx.size() - 1), random.nextInt(availIdx.isEmpty()? 1 : availIdx.size()));
                 int element = availIdx.get(chosenIdx);
                 generated.add(element);
                 availIdx.removeIf(e -> e.equals(element));
@@ -160,7 +167,7 @@ public class BotGenetic extends Bot implements Fallbackable {
 //                    System.out.println(a + " MUTATION");
                     availIdx.removeAll(newGenes.get(i));
                     List<Integer> removedIdx = new ArrayList<>(newGenes.get(i));
-                    newGenes.get(i).set(Math.min(history.size() - 1 + mutationIdx + random.nextInt(mutationIdx), newGenes.get(i).size()-1), availIdx.get(random.nextInt(availIdx.size() + (availIdx.isEmpty() ? 1 : 0))));
+                    newGenes.get(i).set(Math.min(history.size() - 1 + mutationIdx + random.nextInt(mutationIdx), newGenes.get(i).size()-1), availIdx.get(Math.min(availIdx.isEmpty()? 0 : (availIdx.size() - 1), random.nextInt(availIdx.isEmpty()? 1 : availIdx.size()))));
                     availIdx.addAll(removedIdx);
                 }
 
