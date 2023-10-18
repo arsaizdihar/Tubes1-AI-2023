@@ -25,6 +25,8 @@ public class Chromosome {
                 this.board[i][j] = 'n';
             }
         }
+
+        // Removed pre-filled tiles
         this.setCol(6, 0, 'O');
         this.setCol(7, 0, 'O');
         this.setCol(6, 1, 'O');
@@ -47,6 +49,7 @@ public class Chromosome {
             }
         }
 
+        // Removed pre-filled tiles
         this.setCol(6, 0, 'O');
         this.setCol(7, 0, 'O');
         this.setCol(6, 1, 'O');

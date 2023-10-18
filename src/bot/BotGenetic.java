@@ -164,6 +164,7 @@ public class BotGenetic extends Bot implements Fallbackable {
 
         }
 
+        // Returning move
         int[] move = new int[2];
         int i = 0;
         do {
@@ -187,6 +188,7 @@ public class BotGenetic extends Bot implements Fallbackable {
     @Override
     public int[] fallback(int Xscore, int Oscore) {
         System.out.println("FALLBACK");
+        // Returning move
         int[] move = new int[2];
         int i = 0;
         do {
@@ -198,8 +200,8 @@ public class BotGenetic extends Bot implements Fallbackable {
                 a[1] = random.nextInt();
                 return a;
             }
-            for (int j = 0; j < fin.size(); j++) {
-                System.out.println("Tree height: " + fin.get(j).getValue() + " Chromosome value: " + fin.get(j).getKey().value + " " + fin.get(j).getKey().gene);
+            for (Map.Entry<Chromosome, Integer> chromosomeIntegerEntry : fin) {
+                System.out.println("Tree height: " + chromosomeIntegerEntry.getValue() + " Chromosome value: " + chromosomeIntegerEntry.getKey().value + " " + chromosomeIntegerEntry.getKey().gene);
             }
             Chromosome result = fin.get(i).getKey();
             System.out.println("PICKED: " + result.value + " " + result.gene + " " + result.gene.get(i));

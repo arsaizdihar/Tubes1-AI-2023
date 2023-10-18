@@ -27,6 +27,7 @@ public class TreeNode {
     }
 
     public void updateValue(Integer value) {
+        // Update node value, according to isMax
         if (this.value == null) {
             this.value = value;
             return;
@@ -39,6 +40,7 @@ public class TreeNode {
     }
 
     public void updateValue(List<Integer> values) {
+        // Update node value, according to isMax, get the min/max of a list
         if (this.isMax) {
             this.value = Collections.max(values);
         } else {
