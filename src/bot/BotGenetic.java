@@ -8,7 +8,7 @@ import java.util.*;
 
 public class BotGenetic extends Bot implements Fallbackable {
 
-    private final int limitGeneration = 500;
+    private final int limitGeneration = 700;
 
     private final int gameTreeDepth;
 
@@ -59,10 +59,11 @@ public class BotGenetic extends Bot implements Fallbackable {
                     int finalI = i;
                     int finalJ = j;
                     availIdx.removeIf(el -> el.equals(finalJ + finalI * this.getBoard().getColCount()));
+                    System.out.print(finalJ + finalI * this.getBoard().getColCount() + " ");
                 }
             }
         }
-
+        System.out.println(" ");
 
         // history
         List<Integer> history = new ArrayList<>();
@@ -166,12 +167,17 @@ public class BotGenetic extends Bot implements Fallbackable {
         int[] move = new int[2];
         int i = 0;
         do {
-            Chromosome result = rt.getNTopValues(15).get(i).getKey();
-            Pair<Integer, Integer> coord = result.translate(result.gene.get(i));
-            move[0] = coord.getKey();
-            move[1] = coord.getValue();
+            List<Map.Entry<Chromosome, Integer>> fin = rt.getNTopValues(15);
+            for (int j = 0; j < 15; j++) {
+                System.out.println("Tree height: " + fin.get(j).getValue() + " Chromosome value: " + fin.get(j).getKey().value + " " + fin.get(j).getKey().gene);
+            }
+            Chromosome result = fin.get(i).getKey();
+            System.out.println("PICKED: " + result.value + " " + result.gene + " " + result.gene.get(i));
+
+            move[1] = result.gene.get(i) % this.getBoard().getColCount();
+            move[0] = result.gene.get(i) / this.getBoard().getColCount();
             i += 1;
-        } while (!availIdx.contains(move[0] + move[1] * this.getBoard().getColCount()));
+        } while (!availIdx.contains(move[1] + move[0] * this.getBoard().getColCount()));
 
         rt = new ReservationTree();
         return move;
@@ -184,13 +190,31 @@ public class BotGenetic extends Bot implements Fallbackable {
         int[] move = new int[2];
         int i = 0;
         do {
-            Chromosome result = rt.getNTopValues(15).get(i).getKey();
-            Pair<Integer, Integer> coord = result.translate(result.gene.get(i));
-            move[0] = coord.getKey();
-            move[1] = coord.getValue();
+            List<Map.Entry<Chromosome, Integer>> fin = rt.getNTopValues(15);
+            if (fin.isEmpty()) {
+                Random random = new Random();
+                int[] a = new int[2];
+                a[0] = random.nextInt();
+                a[1] = random.nextInt();
+                return a;
+            }
+            for (int j = 0; j < fin.size(); j++) {
+                System.out.println("Tree height: " + fin.get(j).getValue() + " Chromosome value: " + fin.get(j).getKey().value + " " + fin.get(j).getKey().gene);
+            }
+            Chromosome result = fin.get(i).getKey();
+            System.out.println("PICKED: " + result.value + " " + result.gene + " " + result.gene.get(i));
+
+            move[1] = result.gene.get(i) % this.getBoard().getColCount();
+            move[0] = result.gene.get(i) / this.getBoard().getColCount();
             i += 1;
-        } while (!availIdx.contains(move[0] + move[1] * this.getBoard().getColCount()));
+        } while (!availIdx.contains(move[1] + move[0] * this.getBoard().getColCount()));
+
         rt = new ReservationTree();
         return move;
+    }
+
+    @Override
+    public void onFastSuccess() {
+
     }
 }
